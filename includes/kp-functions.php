@@ -102,6 +102,9 @@ function kp_create_session_order( $order_id, $klarna_country = false ) {
  * Unsets all Klarna Payments sessions.
  */
 function kp_unset_session_values() {
+	if ( is_admin() ) {
+		return;
+	}
 	WC()->session->__unset( 'klarna_payments_session_id' );
 	WC()->session->__unset( 'klarna_payments_client_token' );
 	WC()->session->__unset( 'klarna_payments_session_country' );
@@ -141,6 +144,9 @@ function get_klarna_customer( $customer_type ) {
  * @param WC_Order|false $order The WooCommerce order.
  */
 function kp_get_klarna_country( $order = false ) {
+	if ( is_admin() ) {
+		return;
+	}
 	if ( ! empty( $order ) ) {
 		return apply_filters( 'wc_klarna_payments_country', $order->get_billing_country() );
 	}

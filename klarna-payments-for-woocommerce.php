@@ -280,4 +280,34 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 	function KP_WC() { // phpcs:ignore
 		return WC_Klarna_Payments::get_instance();
 	}
+
+	add_action( 'woocommerce_blocks_loaded', 'woocommerce_gateway_kco_woocommerce_block_support' );
+
+	/**
+	 * Register a callback action.
+	 *
+	 * @throws Exception If there is no dependency for the given identifier in the container.
+	 */
+	function woocommerce_gateway_kco_woocommerce_block_support() {
+		if ( class_exists( 'Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType' ) ) {
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-wc-kp-blocks-support.php';
+			add_action(
+				'woocommerce_blocks_payment_method_type_registration',
+				function( Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry $payment_method_registry ) {
+					$container = Automattic\WooCommerce\Blocks\Package::container();
+					// registers as shared instance.
+					$container->register(
+						WC_KP_Blocks_Support::class,
+						function() {
+							return new WC_KP_Blocks_Support();
+
+						}
+					);
+					$payment_method_registry->register(
+						$container->get( WC_KP_Blocks_Support::class )
+					);
+				}
+			);
+		}
+	}
 }

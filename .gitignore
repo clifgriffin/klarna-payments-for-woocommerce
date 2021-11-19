@@ -20,3 +20,5 @@ wp-content/plugins/hello.php
 
 SyncToy_41f30428-8c8e-4927-9b86-4847bfc96e42.dat
 package-lock.json
+.DS_Store
+build
